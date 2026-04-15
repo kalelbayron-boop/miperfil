@@ -1,235 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOU DEAD ❤️</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
-        
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.5s ease; }
-        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; color: #fff; text-transform: uppercase; }
-        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOU DEAD 💖</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
+        
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.5s ease; }
+        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; color: #fff; text-transform: uppercase; }
+        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
 
-        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: opacity 1s; }
-        
-        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; opacity: 0; transform: translateY(20px); transition: 1s ease-out; }
+        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0; transition: opacity 1s; }
+        
+        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; opacity: 0; transform: translateY(20px); transition: 1s ease-out; }
 
-        h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff; animation: flicker 1.5s infinite alternate; }
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff, 0 0 70px #0ff, 0 0 100px #0ff; }
-            20%, 24%, 55% { text-shadow: none; }
-        }
+        h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff; animation: flicker 1.5s infinite alternate; margin-bottom: 10px; }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff, 0 0 70px #0ff, 0 0 100px #0ff; }
+            20%, 24%, 55% { text-shadow: none; }
+        }
 
-        .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px; }
-        .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
+        .quote { font-style: italic; color: #eee; margin: 15px 0 10px 0; font-size: 1.1rem; letter-spacing: 1px; }
+        .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
 
-        /* --- BLOQUE DE DISCORD ESTILO TARJETA --- */
-        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 18px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
-        .discord-avatar-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
-        .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .status-dot { position: absolute; bottom: 4px; right: 4px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #111; background: #747f8d; }
-        
-        .discord-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
-        .discord-name { font-weight: bold; font-size: 1.1rem; color: #fff; margin-bottom: 2px; }
-        
-        /* Bloques separados */
-        .status-block { font-size: 0.85rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: none; align-items: center; gap: 5px; }
-        .status-block.active { display: flex; }
-        .status-block i { font-size: 0.75rem; opacity: 0.7; }
+        /* --- BLOQUE DE DISCORD ESTILO TARJETA --- */
+        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 18px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; position: relative;}
+        .discord-avatar-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
+        .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .status-dot { position: absolute; bottom: 4px; right: 4px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #111; background: #747f8d; }
+        
+        .discord-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
+        .discord-name-container { display: flex; align-items: center; gap: 5px; margin-bottom: 2px;}
+        .discord-name { font-weight: bold; font-size: 1.1rem; color: #fff; }
+        .discord-icons { font-size: 0.9rem; color: #1DB954;} /* Color verde para iconos */
+        
+        /* Bloques separados */
+        .status-block { font-size: 0.85rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: none; align-items: center; gap: 5px; }
+        .status-block.active { display: flex; }
+        .status-block i { font-size: 0.75rem; opacity: 0.7; }
+        
+        /* Icono del juego FIJO */
+        .game-icon-container { width: 50px; height: 50px; flex-shrink: 0; border-radius: 10px; overflow: hidden;}
+        .game-icon { width: 100%; height: 100%; object-fit: cover; }
 
-        .game-icon { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
+        .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
+        .socials a:hover { opacity: 1; transform: scale(1.2); }
 
-        .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
-        .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
-        .socials a:hover { opacity: 1; transform: scale(1.2); }
+        /* --- CARD DE MÚSICA INFERIOR --- */
+        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; opacity: 0; transition: 1s; }
+        .album-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+        .music-details { display: flex; flex-direction: column; }
+        .music-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 2px; }
+        .progress-container { width: 130px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 6px 0; }
+        .progress-bar { height: 100%; background: #1DB954; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #1DB954; transition: width 0.1s linear; }
+        .time-info { font-size: 0.65rem; color: #aaa; display: flex; justify-content: space-between; }
 
-        /* --- CARD DE MÚSICA INFERIOR --- */
-        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; opacity: 0; transition: 1s; }
-        .album-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
-        .music-details { display: flex; flex-direction: column; }
-        .music-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 2px; }
-        .progress-container { width: 130px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 6px 0; }
-        .progress-bar { height: 100%; background: #1DB954; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #1DB954; transition: width 0.1s linear; }
-        .time-info { font-size: 0.65rem; color: #aaa; display: flex; justify-content: space-between; }
-
-        #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
-        .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.4; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-    </style>
+        #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
+        .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.4; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
 </head>
 <body>
 
-    <div id="overlay" onclick="start()">
-        <p>[ CLICK TO ENTER ]</p>
-    </div>
+    <div id="overlay" onclick="start()">
+        <p>[ CLICK TO ENTER ]</p>
+    </div>
 
-    <div id="ghost-container"></div>
+    <div id="ghost-container"></div>
 
-    <video id="vid" loop playsinline preload="auto">
-        <source src="fondo.mp4" type="video/mp4">
-    </video>
+    <video id="vid" loop playsinline preload="auto">
+        <source src="fondo.mp4" type="video/mp4">
+    </video>
 
-    <div class="container" id="main-content">
-        <h1>YOU DEAD ❤️</h1>
-        <p class="quote">"I'm not suicidal but man, death sounds so peaceful"</p>
-        <p class="location"><i class="fas fa-map-marker-alt"></i> Shibuya</p>
+    <div class="container" id="main-content">
+        <h1>YOU DEAD 💖</h1>
+        <p class="quote">"I'm not suicidal but man, death sounds so peaceful"</p>
+        <p class="location"><i class="fas fa-map-marker-alt"></i> Shibuya</p>
 
-        <div class="discord-status">
-            <div class="discord-avatar-container">
-                <img id="user-avatar" src="" class="discord-avatar">
-                <div id="status-dot" class="status-dot"></div>
+        <div class="discord-status">
+            <div class="discord-avatar-container">
+                <img id="user-avatar" src="" class="discord-avatar">
+                <div id="status-dot" class="status-dot"></div>
+            </div>
+            <div class="discord-info">
+                <div class="discord-name-container">
+                    <p id="discord-name" class="discord-name">Cargando...</p>
+                    <span class="discord-icons">
+                        <i class="fas fa-check-circle" title="Verificado"></i> <i class="fas fa-cross" title="Cross"></i> </span>
+                </div>
+                <div id="block-game" class="status-block active">
+                    <i class="fas fa-gamepad"></i> <span id="text-game">Jugando a Left 4 Dead 2</span>
+                </div>
+                <div id="block-spotify" class="status-block">
+                    <i class="fab fa-spotify" style="color: #1DB954;"></i> <span id="text-spotify"></span>
+                </div>
+                <div id="block-idle" class="status-block">
+                    <span id="text-idle">Offline</span>
+                </div>
+            </div>
+            <div class="game-icon-container">
+                <img id="game-icon" src="https://static-cdn.jtvnw.net/ttv-boxart/18928_IGDB-285x380.jpg" class="game-icon">
             </div>
-            <div class="discord-info">
-                <p id="discord-name" class="discord-name">Cargando...</p>
-                <div id="block-game" class="status-block">
-                    <i class="fas fa-gamepad"></i> <span id="text-game"></span>
-                </div>
-                <div id="block-spotify" class="status-block">
-                    <i class="fab fa-spotify" style="color: #1DB954;"></i> <span id="text-spotify"></span>
-                </div>
-                <div id="block-idle" class="status-block active">
-                    <span id="text-idle">Offline</span>
-                </div>
-            </div>
-            <img id="game-icon" class="game-icon">
-        </div>
+        </div>
 
-        <div class="socials">
-            <a href="#" title="Spotify"><i class="fab fa-spotify"></i></a>
-            <a href="https://discord.gg/pz9Bb9As" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-            <a href="https://www.instagram.com/itz_andreaa18/?hl=es" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
-            <a href="https://steamcommunity.com/profiles/76561199805419392/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
-        </div>
-    </div>
+        <div class="socials">
+            <a href="#" title="Spotify"><i class="fab fa-spotify"></i></a>
+            <a href="https://discord.gg/pz9Bb9As" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://www.instagram.com/itz_andreaa18/?hl=es" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://steamcommunity.com/profiles/76561199805419392/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
+        </div>
+    </div>
 
-    <div class="music-card" id="music-player">
-        <img id="spotify-album-art" src="" class="album-art">
-        <div class="music-details">
-            <span id="spotify-song-title" class="music-title">Nada reproduciendo</span>
-            <div class="progress-container">
-                <div class="progress-bar" id="music-progress"></div>
-            </div>
-            <div class="time-info">
-                <span id="cur-time">0:00</span>
-                <span id="total-time">0:00</span>
-            </div>
-        </div>
-        <div style="font-size: 1.2rem; margin-left: 10px; opacity: 0.8;"><i class="fas fa-music"></i></div>
-    </div>
+    <div class="music-card" id="music-player">
+        <img id="spotify-album-art" src="" class="album-art">
+        <div class="music-details">
+            <span id="spotify-song-title" class="music-title">Nada reproduciendo</span>
+            <div class="progress-container">
+                <div class="progress-bar" id="music-progress"></div>
+            </div>
+            <div class="time-info">
+                <span id="cur-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
+        <div style="font-size: 1.2rem; margin-left: 10px; opacity: 0.8;"><i class="fas fa-music"></i></div>
+    </div>
 
-    <script>
-        const ghostImg = "https://www.pngarts.com/files/3/Ghost-PNG-Transparent-Image.png"; 
-        
-        function createGhost() {
-            const container = document.getElementById('ghost-container');
-            if(!container) return;
-            const ghost = document.createElement('img');
-            ghost.src = ghostImg;
-            ghost.className = 'ghost';
-            ghost.style.left = Math.random() * 100 + '%';
-            ghost.style.animationDuration = (Math.random() * 3 + 5) + 's';
-            container.appendChild(ghost);
-            setTimeout(() => { ghost.remove(); }, 8000);
-        }
+    <script>
+        const ghostImg = "https://www.pngarts.com/files/3/Ghost-PNG-Transparent-Image.png"; 
+        const userId = '1338298959105495160'; // Tu ID de Discord
+        
+        function createGhost() {
+            const container = document.getElementById('ghost-container');
+            if(!container) return;
+            const ghost = document.createElement('img');
+            ghost.src = ghostImg;
+            ghost.className = 'ghost';
+            ghost.style.left = Math.random() * 100 + '%';
+            ghost.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            container.appendChild(ghost);
+            setTimeout(() => { ghost.remove(); }, 8000);
+        }
 
-        function start() {
-            const vid = document.getElementById('vid');
-            const overlay = document.getElementById('overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-            vid.style.opacity = '0.6';
-            document.getElementById('main-content').style.opacity = '1';
-            document.getElementById('main-content').style.transform = 'translateY(0)';
-            document.getElementById('music-player').style.opacity = '1';
-            vid.muted = true;
-            vid.play().then(() => { vid.muted = false; }).catch(() => { vid.play(); });
-            setInterval(createGhost, 700);
-            fetchStatus();
-            setInterval(fetchStatus, 5000); 
-        }
+        function start() {
+            const vid = document.getElementById('vid');
+            const overlay = document.getElementById('overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            vid.style.opacity = '0.6';
+            document.getElementById('main-content').style.opacity = '1';
+            document.getElementById('main-content').style.transform = 'translateY(0)';
+            document.getElementById('music-player').style.opacity = '1';
+            vid.muted = true;
+            vid.play().then(() => { vid.muted = false; }).catch(() => { vid.play(); });
+            setInterval(createGhost, 700);
+            fetchStatus();
+            setInterval(fetchStatus, 5000); 
+        }
 
-        async function fetchStatus() {
-            try {
-                const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
-                const json = await response.json();
-                if (!json.success) return;
-                
-                const data = json.data;
-                
-                // Info Usuario
-                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
-                if (data.discord_user.avatar) {
-                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/1338298959105495160/${data.discord_user.avatar}.png`;
-                }
-                const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
-                document.getElementById('status-dot').style.background = statusColors[data.discord_status] || statusColors.offline;
+        async function fetchStatus() {
+            try {
+                const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+                const json = await response.json();
+                if (!json.success) return;
+                
+                const data = json.data;
+                
+                // Info Usuario
+                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
+                if (data.discord_user.avatar) {
+                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${userId}/${data.discord_user.avatar}.png`;
+                }
+                const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
+                document.getElementById('status-dot').style.background = statusColors[data.discord_status] || statusColors.offline;
 
-                // Control de Bloques
-                const blockGame = document.getElementById('block-game');
-                const blockSpotify = document.getElementById('block-spotify');
-                const blockIdle = document.getElementById('block-idle');
-                const gameIcon = document.getElementById('game-icon');
+                // Control de Bloques de Estado - Lógica Modificada para ser estática
+                const blockGame = document.getElementById('block-game');
+                const blockSpotify = document.getElementById('block-spotify');
+                const blockIdle = document.getElementById('block-idle');
 
-                let activeActivity = false;
+                // Mantenemos FIJO el estado de "Jugando", ignoramos Lanyard para esto
+                blockGame.classList.add('active');
+                blockSpotify.classList.remove('active');
+                blockIdle.classList.remove('active');
 
-                // 1. Lógica de Juego
-                const game = data.activities.find(a => a.type === 0);
-                if (game) {
-                    blockGame.classList.add('active');
-                    document.getElementById('text-game').innerText = `Jugando a ${game.name}`;
-                    activeActivity = true;
-                    if (game.assets && game.assets.large_image) {
-                        let imgId = game.assets.large_image;
-                        gameIcon.src = imgId.startsWith("mp:external") 
-                            ? `https://media.discordapp.net/external/${imgId.split("mp:external/")[1]}`
-                            : `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgId}.png`;
-                        gameIcon.style.display = 'block';
-                    }
-                } else {
-                    blockGame.classList.remove('active');
-                    gameIcon.style.display = 'none';
-                }
+                // 2. Lógica de Spotify (Solo para el player inferior)
+                if (data.listening_to_spotify && data.spotify) {
+                    const spotifyText = `Escuchando a ${data.spotify.artist}`; // Opcional: mostrarlo en el player
 
-                // 2. Lógica de Spotify
-                if (data.listening_to_spotify && data.spotify) {
-                    blockSpotify.classList.add('active');
-                    document.getElementById('text-spotify').innerText = `Escuchando ${data.spotify.song}`;
-                    activeActivity = true;
+                    // Actualizar Player inferior
+                    document.getElementById('spotify-song-title').innerText = data.spotify.song;
+                    document.getElementById('spotify-album-art').src = data.spotify.album_art_url;
 
-                    // Actualizar Player inferior
-                    document.getElementById('spotify-song-title').innerText = data.spotify.song;
-                    document.getElementById('spotify-album-art').src = data.spotify.album_art_url;
-                    
-                    // Si no hay juego, la portada de Spotify va al icono lateral
-                    if (!game) {
-                        gameIcon.src = data.spotify.album_art_url;
-                        gameIcon.style.display = 'block';
-                        gameIcon.style.borderRadius = '10px';
-                    }
+                    // Progreso
+                    const progress = Math.max(0, Math.min(100, ((Date.now() - data.spotify.timestamps.start) / (data.spotify.timestamps.end - data.spotify.timestamps.start)) * 100));
+                    document.getElementById('music-progress').style.width = progress + "%";
+                } else {
+                    document.getElementById('spotify-song-title').innerText = "Nada reproduciendo";
+                    document.getElementById('music-progress').style.width = "0%";
+                }
 
-                    // Progreso
-                    const progress = Math.max(0, Math.min(100, ((Date.now() - data.spotify.timestamps.start) / (data.spotify.timestamps.end - data.spotify.timestamps.start)) * 100));
-                    document.getElementById('music-progress').style.width = progress + "%";
-                } else {
-                    blockSpotify.classList.remove('active');
-                    document.getElementById('spotify-song-title').innerText = "Nada reproduciendo";
-                    document.getElementById('music-progress').style.width = "0%";
-                }
-
-                // 3. Estado Idle (Just chilling)
-                if (!activeActivity) {
-                    blockIdle.classList.add('active');
-                    document.getElementById('text-idle').innerText = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
-                } else {
-                    blockIdle.classList.remove('active');
-                }
-
-            } catch (e) { console.error("Error Lanyard:", e); }
-        }
-    </script>
+            } catch (e) { console.error("Error Lanyard:", e); }
+        }
+    </script>
 </body>
 </html>
