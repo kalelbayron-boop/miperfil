@@ -15,33 +15,40 @@
 
         video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; }
         
-        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; }
+        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; margin-top: -50px; }
 
-        h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff; animation: flicker 1.5s infinite alternate; }
+        h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 70px #0ff; animation: flicker 1.5s infinite alternate; }
+        @keyframes flicker { 0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff, 0 0 70px #0ff; } 20%, 24%, 55% { text-shadow: none; } }
 
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff, 0 0 70px #0ff, 0 0 100px #0ff; }
-            20%, 24%, 55% { text-shadow: none; }
-        }
-
-        .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px; }
+        .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; }
         .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
 
-        /* Cuadro de Estado Informativo */
-        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
-        .discord-avatar-container { position: relative; width: 55px; height: 55px; flex-shrink: 0; }
+        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 25px; }
+        .discord-avatar-container { position: relative; width: 55px; height: 55px; }
         .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; background: #747f8d; }
+        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; }
         .discord-info { flex: 1; overflow: hidden; }
-        .discord-name { font-weight: bold; font-size: 1rem; color: #fff; }
-        .discord-activity { font-size: 0.8rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-        .game-icon { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; display: none; }
+        .discord-name { font-weight: bold; font-size: 1rem; }
+        .discord-activity { font-size: 0.8rem; color: #ccc; }
+        .game-icon { width: 45px; height: 45px; border-radius: 8px; display: none; }
 
-        .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
-        .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
+        .socials { display: flex; justify-content: center; gap: 15px; }
+        .socials a { color: white; font-size: 1.6rem; text-decoration: none; opacity: 0.6; transition: 0.3s; }
         .socials a:hover { opacity: 1; transform: scale(1.2); }
 
-        #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
+        /* REPRODUCTOR MUSICA COMPACTO */
+        .music-card { position: fixed; bottom: 30px; left: 30px; background: rgba(0,0,0,0.6); padding: 12px 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; z-index: 20; min-width: 280px; }
+        .album-art { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+        .music-info { flex: 1; }
+        .music-title { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 2px; }
+        .music-subtitle { font-size: 0.7rem; color: #aaa; }
+        
+        /* Barra de progreso mediana */
+        .progress-container { width: 140px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 8px 0; position: relative; }
+        .progress-bar { height: 100%; background: #fff; width: 0%; border-radius: 2px; transition: width 0.1s linear; box-shadow: 0 0 5px #fff; }
+        .time-info { font-size: 0.65rem; color: #888; display: flex; justify-content: space-between; }
+
+        #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
         .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.5; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
@@ -79,78 +86,4 @@
             <a href="#"><i class="fab fa-spotify"></i></a>
             <a href="https://discord.gg/pz9Bb9As" target="_blank"><i class="fab fa-discord"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
-            <a href="#"><i class="fab fa-steam"></i></a>
-        </div>
-    </div>
-
-    <script>
-        const ghostImg = "https://www.pngarts.com/files/3/Ghost-PNG-Transparent-Image.png"; 
-        
-        function createGhost() {
-            const container = document.getElementById('ghost-container');
-            const ghost = document.createElement('img');
-            ghost.src = ghostImg;
-            ghost.className = 'ghost';
-            ghost.style.left = Math.random() * 100 + '%';
-            ghost.style.animationDuration = (Math.random() * 3 + 5) + 's';
-            container.appendChild(ghost);
-            setTimeout(() => { ghost.remove(); }, 8000);
-        }
-
-        function start() {
-            document.getElementById('overlay').style.display = 'none';
-            const v = document.getElementById('vid');
-            v.muted = false; 
-            v.play();
-            setInterval(createGhost, 700);
-            fetchStatus();
-        }
-
-        async function fetchStatus() {
-            try {
-                const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
-                const json = await response.json();
-                const data = json.data;
-
-                // Nombre automático desde tu perfil de Discord
-                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
-
-                if (data.discord_user.avatar) {
-                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/1338298959105495160/${data.discord_user.avatar}.png`;
-                }
-
-                const dot = document.getElementById('status-dot');
-                const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
-                dot.style.background = statusColors[data.discord_status] || statusColors.offline;
-
-                const activityEl = document.getElementById('discord-activity');
-                const gameIcon = document.getElementById('game-icon');
-                
-                const game = data.activities.find(a => a.type === 0);
-                const customStatus = data.activities.find(a => a.type === 4);
-
-                if (game) {
-                    activityEl.innerText = `Jugando a ${game.name}`;
-                    if (game.assets && game.assets.large_image) {
-                        let imgId = game.assets.large_image;
-                        gameIcon.src = imgId.startsWith("mp:external") 
-                            ? `https://media.discordapp.net/external/${imgId.split("mp:external/")[1]}`
-                            : `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgId}.png`;
-                        gameIcon.style.display = 'block';
-                    } else {
-                        gameIcon.style.display = 'none';
-                    }
-                } else if (customStatus) {
-                    activityEl.innerText = customStatus.state || "Just chilling";
-                    gameIcon.style.display = 'none';
-                } else {
-                    activityEl.innerText = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
-                    gameIcon.style.display = 'none';
-                }
-            } catch (e) { console.log(e); }
-        }
-        setInterval(fetchStatus, 15000);
-    </script>
-</body>
-</html>
+            <a href="#"><i class="fab fa-tiktok">
