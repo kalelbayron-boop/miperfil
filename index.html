@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
         
-        /* PANTALLA DE ENTRADA CON Z-INDEX ALTO */
+        /* FIX: Overlay con prioridad máxima para que detecte el click */
         #overlay { 
             position: fixed; 
             top: 0; 
@@ -17,7 +17,7 @@
             width: 100%; 
             height: 100%; 
             background: #000; 
-            z-index: 9999; 
+            z-index: 10000; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -26,14 +26,12 @@
         #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; }
         @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
 
-        /* Video de fondo */
         video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; }
         
         .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; }
 
-        /* Texto YOU DEAD ❤️ con Neón Eléctrico */
         h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             letter-spacing: 4px;
             color: #fff;
             text-transform: uppercase;
@@ -51,25 +49,21 @@
         .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px;}
         .location { font-size: 0.9rem; color: #bbb; margin-bottom: 25px; }
 
-        /* Cuadro de Discord */
         .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 18px; border-radius: 20px; display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
         .discord-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); object-fit: cover; }
         .discord-info { flex: 1; }
         .discord-name { font-weight: bold; font-size: 1rem; color: #fff; margin-bottom: 3px; }
         .discord-activity { font-size: 0.85rem; color: #ccc; }
-        .discord-extra-icon { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; display: none; }
 
         .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
         .socials a { color: white; font-size: 1.8rem; text-decoration: none; transition: 0.3s; opacity: 0.7; }
         .socials a:hover { opacity: 1; transform: scale(1.1); }
 
-        /* Reproductor */
         .music-card { display: flex; align-items: center; gap: 15px; text-align: left; position: fixed; bottom: 30px; left: 30px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); z-index: 20; }
         .album-art { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; }
         .bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 8px 0; }
         .progress { height: 100%; background: #fff; width: 0%; transition: width 0.1s linear; }
 
-        /* Muñequitos Cayendo - AHORA NO BLOQUEAN LOS CLICKS */
         #character-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
         .falling-character { position: absolute; top: -50px; width: 30px; height: 30px; object-fit: contain; opacity: 0.8; animation: fall linear infinite; pointer-events: none; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
@@ -96,10 +90,8 @@
             <img id="user-avatar" src="https://i.pinimg.com/1200x/e4/14/da/e414da7e55508a6e6674060b0db53c4f.jpg" class="discord-avatar">
             <div class="discord-info">
                 <p class="discord-name">Lin</p>
-                <p id="discord-activity" class="discord-activity">Cargando...</p>
-                <p id="discord-details" style="font-size: 0.8rem; color: #aaa;"></p>
+                <p id="discord-activity" class="discord-activity">Just chilling</p>
             </div>
-            <img id="discord-extra-icon" src="" class="discord-extra-icon">
         </div>
 
         <div class="socials">
@@ -121,35 +113,30 @@
     </div>
 
     <script>
-        // --- Configuración de los Muñequitos Cayendo ---
-        // Puedes cambiar esta URL por la de CUALQUIER imagen (transparente)
         const characterImageUrl = "https://i.imgur.com/vH9Xf8n.png"; 
         
         function createFallingCharacter() {
             const container = document.getElementById('character-container');
-            for (let i = 0; i < 15; i++) {
-                const char = document.createElement('img');
-                char.src = characterImageUrl;
-                char.className = 'falling-character';
-                char.style.left = Math.random() * 100 + '%';
-                char.style.animationDelay = Math.random() * 3 + 's';
-                char.style.animationDuration = (5 + Math.random() * 5) + 's';
-                container.appendChild(char);
-                char.addEventListener('animationend', () => { char.remove(); });
-            }
+            const char = document.createElement('img');
+            char.src = characterImageUrl;
+            char.className = 'falling-character';
+            char.style.left = Math.random() * 100 + '%';
+            char.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            container.appendChild(char);
+            char.addEventListener('animationend', () => { char.remove(); });
         }
 
         function start() {
-            document.getElementById('overlay').style.display = 'none';
+            // Eliminar la pantalla negra
+            const ov = document.getElementById('overlay');
+            ov.style.display = 'none';
+            
             const v = document.getElementById('vid');
             v.muted = false; 
-            v.play();
+            v.play().catch(e => console.log("Error al reproducir:", e));
             
-            // Iniciar funciones
-            fetchStatus();
             setInterval(createFallingCharacter, 800);
             
-            // Actualizar barra de progreso sincronizada con el video
             v.ontimeupdate = function() {
                 const bar = document.getElementById('p-bar');
                 const time = document.getElementById('time-display');
@@ -157,4 +144,9 @@
                 bar.style.width = pct + "%";
                 const cur = Math.floor(v.currentTime);
                 const dur = Math.floor(v.duration) || 0;
-                time.innerText = `0:${cur < 1
+                time.innerText = `0:${cur < 10 ? '0'+cur : cur} / 0:${dur < 10 ? '0'+dur : dur}`;
+            };
+        }
+    </script>
+</body>
+</html>
