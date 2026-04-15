@@ -6,17 +6,16 @@
     <title>YOU DEAD ❤️</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilos base del diseño original */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; }
         
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; }
+        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; color: #fff; }
         @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
 
-        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; }
+        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; display: none; }
         
-        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; }
+        .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; display: none; }
 
         h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff; animation: flicker 1.5s infinite alternate; }
         @keyframes flicker {
@@ -27,7 +26,6 @@
         .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px; }
         .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
 
-        /* Cuadro de Discord original de tus capturas */
         .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
         .discord-avatar-container { position: relative; width: 55px; height: 55px; flex-shrink: 0; }
         .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -41,16 +39,14 @@
         .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
         .socials a:hover { opacity: 1; transform: scale(1.2); }
 
-        /* NUEVO: Reproductor de Música Compacto solicitado */
-        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; }
+        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: none; align-items: center; gap: 15px; z-index: 20; }
         .album-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
         .music-details { display: flex; flex-direction: column; }
         .music-title { font-size: 0.9rem; font-weight: bold; }
         .progress-container { width: 130px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 6px 0; }
-        .progress-bar { height: 100%; background: #fff; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #fff; transition: width 0.1s linear; }
+        .progress-bar { height: 100%; background: #fff; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #fff; }
         .time-info { font-size: 0.65rem; color: #aaa; display: flex; justify-content: space-between; }
 
-        /* Efecto de fantasmas cayendo */
         #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
         .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.5; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
@@ -68,7 +64,7 @@
         <source src="fondo.mp4" type="video/mp4">
     </video>
 
-    <div class="container">
+    <div class="container" id="main-content">
         <h1>YOU DEAD ❤️</h1>
         <p class="quote">"I'm not suicidal but man, death sounds so peaceful"</p>
         <p class="location"><i class="fas fa-map-marker-alt"></i> Shibuya</p>
@@ -94,7 +90,7 @@
         </div>
     </div>
 
-    <div class="music-card">
+    <div class="music-card" id="music-player">
         <img src="https://i.pinimg.com/736x/88/54/10/885410313838206253c3d10542387140.jpg" class="album-art">
         <div class="music-details">
             <span class="music-title">Passifista</span>
@@ -124,9 +120,63 @@
         }
 
         function start() {
-            document.getElementById('overlay').style.display = 'none';
-            const v = document.getElementById('vid');
-            v.muted = false; 
-            v.play();
+            const overlay = document.getElementById('overlay');
+            const vid = document.getElementById('vid');
+            const mainContent = document.getElementById('main-content');
+            const musicPlayer = document.getElementById('music-player');
+
+            overlay.style.display = 'none';
+            vid.style.display = 'block';
+            mainContent.style.display = 'block';
+            musicPlayer.style.display = 'flex';
+
+            vid.muted = false; 
+            vid.play().catch(error => console.log("Error al reproducir video:", error));
+            
             setInterval(createGhost, 700);
             fetchStatus();
+
+            vid.ontimeupdate = function() {
+                const pct = (vid.currentTime / vid.duration) * 100;
+                document.getElementById('music-progress').style.width = pct + "%";
+                const cur = Math.floor(vid.currentTime);
+                const secs = cur % 60;
+                const mins = Math.floor(cur / 60);
+                document.getElementById('cur-time').innerText = `${mins}:${secs < 10 ? '0'+secs : secs}`;
+            };
+        }
+
+        async function fetchStatus() {
+            try {
+                const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
+                const json = await response.json();
+                const data = json.data;
+                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
+                if (data.discord_user.avatar) {
+                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/1338298959105495160/${data.discord_user.avatar}.png`;
+                }
+                const dot = document.getElementById('status-dot');
+                const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
+                dot.style.background = statusColors[data.discord_status] || statusColors.offline;
+                const activityEl = document.getElementById('discord-activity');
+                const gameIcon = document.getElementById('game-icon');
+                const game = data.activities.find(a => a.type === 0);
+                if (game) {
+                    activityEl.innerText = `Jugando a ${game.name}`;
+                    if (game.assets && game.assets.large_image) {
+                        let imgId = game.assets.large_image;
+                        gameIcon.src = imgId.startsWith("mp:external") 
+                            ? `https://media.discordapp.net/external/${imgId.split("mp:external/")[1]}`
+                            : `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgId}.png`;
+                        gameIcon.style.display = 'block';
+                    }
+                } else {
+                    activityEl.innerText = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
+                    gameIcon.style.display = 'none';
+                }
+            } catch (e) { console.log(e); }
+        }
+        setInterval(fetchStatus, 15000);
+    </script>
+</body>
+</html>
