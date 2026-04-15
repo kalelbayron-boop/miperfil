@@ -11,28 +11,28 @@
         
         /* Pantalla de Entrada */
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; }
+        #overlay p { letter-spacing: 5px; opacity: 0.6; animation: pulse 2s infinite; font-size: 14px; }
         @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
 
-        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.5; }
+        video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; opacity: 0.6; }
         .container { text-align: center; z-index: 1; width: 90%; max-width: 450px; }
         
         h1 { font-size: 3.5rem; letter-spacing: 2px; }
         .quote { font-style: italic; color: #eee; margin: 10px 0; font-size: 0.9rem; }
         .location { font-size: 0.8rem; color: #bbb; margin-bottom: 20px; }
 
-        /* Cuadro de Discord real con tu ID */
+        /* Cuadro de Discord */
         .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
         .discord-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); }
         
         .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
         .socials a { color: white; font-size: 1.8rem; text-decoration: none; transition: 0.3s; }
 
-        /* Reproductor de abajo */
+        /* Reproductor de abajo (ahora sincronizado con el video) */
         .music-card { display: flex; align-items: center; gap: 15px; text-align: left; position: fixed; bottom: 30px; left: 30px; }
         .album-art { width: 55px; height: 55px; border-radius: 8px; }
         .bar { width: 250px; height: 2px; background: rgba(255,255,255,0.1); margin: 8px 0; }
-        .progress { height: 100%; background: #fff; width: 40%; }
+        .progress { height: 100%; background: #fff; width: 0%; transition: width 0.1s linear; }
     </style>
 </head>
 <body>
@@ -41,8 +41,9 @@
         <p>[ CLICK TO ENTER ]</p>
     </div>
 
-    <video id="vid" loop muted playsinline><source src="fondo.mp4" type="video/mp4"></video>
-    <audio id="aud" loop><source src="musica.mp3" type="audio/mpeg"></audio>
+    <video id="vid" loop playsinline>
+        <source src="fondo.mp4" type="video/mp4">
+    </video>
 
     <div class="container">
         <h1>Lin</h1>
@@ -70,27 +71,39 @@
         <img src="https://i.pinimg.com/736x/8c/6d/9c/8c6d9c63673f8e5695029e248a31e13e.jpg" class="album-art">
         <div>
             <strong style="font-size: 0.8rem;">cursed</strong>
-            <div class="bar"><div class="progress"></div></div>
-            <p style="font-size: 0.7rem; opacity: 0.6;">0:45 / 3:12</p>
+            <div class="bar"><div class="progress" id="p-bar"></div></div>
+            <p id="time-display" style="font-size: 0.7rem; opacity: 0.6;">0:00 / 0:00</p>
         </div>
     </div>
 
     <script>
         function start() {
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('vid').play();
-            document.getElementById('aud').play();
+            const v = document.getElementById('vid');
+            v.muted = false; // ESTO ACTIVA EL SONIDO DEL VIDEO
+            v.play();
             fetchStatus();
+            
+            // Sincronizar la barra de abajo con el tiempo del video
+            v.ontimeupdate = function() {
+                const bar = document.getElementById('p-bar');
+                const time = document.getElementById('time-display');
+                const pct = (v.currentTime / v.duration) * 100;
+                bar.style.width = pct + "%";
+                
+                const cur = Math.floor(v.currentTime);
+                const dur = Math.floor(v.duration);
+                time.innerText = `0:${cur < 10 ? '0'+cur : cur} / 0:${dur}`;
+            };
         }
 
-        // Esto lee lo que estás haciendo en Discord
         async function fetchStatus() {
             try {
                 const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
                 const data = await response.json();
                 const activity = data.data.activities[0];
                 if (activity) {
-                    document.getElementById('discord-activity').innerText = activity.name + " " + (activity.details || "");
+                    document.getElementById('discord-activity').innerText = activity.name + (activity.details ? " - " + activity.details : "");
                 } else {
                     document.getElementById('discord-activity').innerText = "Just chilling";
                 }
