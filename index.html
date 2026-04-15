@@ -29,7 +29,7 @@
         .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
         .discord-avatar-container { position: relative; width: 55px; height: 55px; flex-shrink: 0; }
         .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; }
+        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; background: #747f8d; }
         .discord-info { flex: 1; overflow: hidden; }
         .discord-name { font-weight: bold; font-size: 1rem; color: #fff; }
         .discord-activity { font-size: 0.8rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
@@ -39,14 +39,14 @@
         .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
         .socials a:hover { opacity: 1; transform: scale(1.2); }
 
-        /* REPRODUCTOR MUSICA COMPACTO (LO NUEVO) */
-        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; z-index: 20; }
-        .album-art { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
-        .music-info { display: flex; flex-direction: column; }
-        .music-title { font-size: 0.85rem; font-weight: bold; color: #fff; }
-        .progress-container { width: 100px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 5px 0; }
-        .progress-bar { height: 100%; background: #fff; width: 35%; border-radius: 2px; }
-        .time-info { font-size: 0.6rem; color: #888; display: flex; justify-content: space-between; }
+        /* REPRODUCTOR MUSICA */
+        .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; }
+        .album-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+        .music-details { display: flex; flex-direction: column; }
+        .music-title { font-size: 0.9rem; font-weight: bold; }
+        .progress-container { width: 130px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 6px 0; }
+        .progress-bar { height: 100%; background: #fff; width: 35%; border-radius: 2px; box-shadow: 0 0 5px #fff; }
+        .time-info { font-size: 0.65rem; color: #aaa; display: flex; justify-content: space-between; }
 
         #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
         .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.5; }
@@ -92,18 +92,57 @@
     </div>
 
     <div class="music-card">
-        <img src="https://i.pinimg.com/736x/f1/83/87/f18387037f433602568779942a779140.jpg" class="album-art">
-        <div class="music-info">
+        <img src="https://i.pinimg.com/736x/88/54/10/885410313838206253c3d10542387140.jpg" class="album-art">
+        <div class="music-details">
             <span class="music-title">Passifista</span>
             <div class="progress-container">
-                <div class="progress-bar"></div>
+                <div class="progress-bar" id="music-progress"></div>
             </div>
             <div class="time-info">
-                <span>0:03</span>
-                <span>3:31</span>
+                <span id="cur-time">0:03</span>
+                <span id="dur-time">3:31</span>
             </div>
         </div>
-        <div style="font-size: 1rem; margin-left: 5px; opacity: 0.8;"><i class="fas fa-pause"></i></div>
+        <div style="font-size: 1.2rem; margin-left: 10px; opacity: 0.8;"><i class="fas fa-pause"></i></div>
     </div>
 
     <script>
+        const ghostImg = "https://www.pngarts.com/files/3/Ghost-PNG-Transparent-Image.png"; 
+        
+        function createGhost() {
+            const container = document.getElementById('ghost-container');
+            const ghost = document.createElement('img');
+            ghost.src = ghostImg;
+            ghost.className = 'ghost';
+            ghost.style.left = Math.random() * 100 + '%';
+            ghost.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            container.appendChild(ghost);
+            setTimeout(() => { ghost.remove(); }, 8000);
+        }
+
+        function start() {
+            document.getElementById('overlay').style.display = 'none';
+            const v = document.getElementById('vid');
+            v.muted = false; 
+            v.play();
+            setInterval(createGhost, 700);
+            fetchStatus();
+
+            v.ontimeupdate = function() {
+                const pct = (v.currentTime / v.duration) * 100;
+                document.getElementById('music-progress').style.width = pct + "%";
+                const cur = Math.floor(v.currentTime);
+                document.getElementById('cur-time').innerText = `0:${cur < 10 ? '0'+cur : cur}`;
+            };
+        }
+
+        async function fetchStatus() {
+            try {
+                const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
+                const json = await response.json();
+                const data = json.data;
+
+                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
+
+                if (data.discord_user.avatar) {
+                    document.getElementById('user-avatar').src = `https://cdn.discordapp.
