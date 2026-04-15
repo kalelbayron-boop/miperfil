@@ -17,14 +17,7 @@
         
         .container { text-align: center; z-index: 10; width: 90%; max-width: 450px; position: relative; }
 
-        h1 {
-            font-size: 3.5rem;
-            letter-spacing: 4px;
-            color: #fff;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff;
-            animation: flicker 1.5s infinite alternate;
-        }
+        h1 { font-size: 3.5rem; letter-spacing: 4px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 70px #0ff, 0 0 100px #0ff; animation: flicker 1.5s infinite alternate; }
 
         @keyframes flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff, 0 0 70px #0ff, 0 0 100px #0ff; }
@@ -34,25 +27,22 @@
         .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px; }
         .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
 
-        .discord-link { text-decoration: none; color: inherit; display: block; margin-bottom: 30px; }
-        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
-        .discord-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-        .discord-info { flex: 1; }
-        .discord-name { font-weight: bold; font-size: 0.9rem; }
-        .discord-activity { font-size: 0.75rem; color: #ccc; }
+        /* Cuadro de Estado Informativo */
+        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
+        .discord-avatar-container { position: relative; width: 55px; height: 55px; flex-shrink: 0; }
+        .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; background: #747f8d; }
+        .discord-info { flex: 1; overflow: hidden; }
+        .discord-name { font-weight: bold; font-size: 1rem; color: #fff; }
+        .discord-activity { font-size: 0.8rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .game-icon { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; display: none; }
 
         .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
         .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
-        .socials a:hover { opacity: 1; transform: scale(1.1); }
+        .socials a:hover { opacity: 1; transform: scale(1.2); }
 
-        .music-card { display: flex; align-items: center; gap: 12px; text-align: left; position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.4); padding: 8px 15px; border-radius: 12px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); z-index: 20; }
-        .album-art { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
-        .bar { width: 150px; height: 2px; background: rgba(255,255,255,0.1); margin: 6px 0; }
-        .progress { height: 100%; background: #fff; width: 0%; transition: width 0.1s linear; }
-
-        /* FANTASMAS CORREGIDOS - Con z-index alto */
         #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
-        .ghost { position: absolute; top: -100px; width: 35px; filter: drop-shadow(0 0 5px white); animation: fall linear infinite; opacity: 0.5; }
+        .ghost { position: absolute; top: -100px; width: 40px; animation: fall linear infinite; opacity: 0.5; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
@@ -73,15 +63,17 @@
         <p class="quote">"I'm not suicidal but man, death sounds so peaceful"</p>
         <p class="location"><i class="fas fa-map-marker-alt"></i> Shibuya</p>
 
-        <a href="https://discord.gg/pz9Bb9As" target="_blank" class="discord-link">
-            <div class="discord-status">
-                <img id="user-avatar" src="https://i.pinimg.com/1200x/e4/14/da/e414da7e55508a6e6674060b0db53c4f.jpg" class="discord-avatar">
-                <div class="discord-info">
-                    <p class="discord-name">Lin</p>
-                    <p id="discord-activity" class="discord-activity">Offline</p>
-                </div>
+        <div class="discord-status">
+            <div class="discord-avatar-container">
+                <img id="user-avatar" src="" class="discord-avatar">
+                <div id="status-dot" class="status-dot"></div>
             </div>
-        </a>
+            <div class="discord-info">
+                <p id="discord-name" class="discord-name">Cargando...</p>
+                <p id="discord-activity" class="discord-activity">Offline</p>
+            </div>
+            <img id="game-icon" class="game-icon">
+        </div>
 
         <div class="socials">
             <a href="#"><i class="fab fa-spotify"></i></a>
@@ -92,17 +84,7 @@
         </div>
     </div>
 
-    <div class="music-card">
-        <img id="music-art" src="https://i.pinimg.com/1200x/e4/14/da/e414da7e55508a6e6674060b0db53c4f.jpg" class="album-art">
-        <div>
-            <strong style="font-size: 0.75rem;">passifista</strong>
-            <div class="bar"><div class="progress" id="p-bar"></div></div>
-            <p id="time-display" style="font-size: 0.65rem; opacity: 0.6;">0:00 / 0:00</p>
-        </div>
-    </div>
-
     <script>
-        // Nueva imagen de fantasma (PNG transparente)
         const ghostImg = "https://www.pngarts.com/files/3/Ghost-PNG-Transparent-Image.png"; 
         
         function createGhost() {
@@ -111,10 +93,9 @@
             ghost.src = ghostImg;
             ghost.className = 'ghost';
             ghost.style.left = Math.random() * 100 + '%';
-            ghost.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            ghost.style.animationDuration = (Math.random() * 3 + 5) + 's';
             container.appendChild(ghost);
-            // Borrar el fantasma cuando termine de caer para no saturar la memoria
-            setTimeout(() => { ghost.remove(); }, 7000);
+            setTimeout(() => { ghost.remove(); }, 8000);
         }
 
         function start() {
@@ -122,43 +103,54 @@
             const v = document.getElementById('vid');
             v.muted = false; 
             v.play();
-            
-            // Lluvia de fantasmas
-            setInterval(createGhost, 600);
+            setInterval(createGhost, 700);
             fetchStatus();
-            
-            v.ontimeupdate = function() {
-                const bar = document.getElementById('p-bar');
-                const time = document.getElementById('time-display');
-                const pct = (v.currentTime / v.duration) * 100;
-                bar.style.width = pct + "%";
-                const cur = Math.floor(v.currentTime);
-                const dur = Math.floor(v.duration) || 0;
-                time.innerText = `0:${cur < 10 ? '0'+cur : cur} / 0:${dur < 10 ? '0'+dur : dur}`;
-            };
         }
 
         async function fetchStatus() {
             try {
-                // Tu ID de Discord (scumtier)
                 const response = await fetch('https://api.lanyard.rest/v1/users/1338298959105495160');
                 const json = await response.json();
                 const data = json.data;
+
+                // Nombre automático desde tu perfil de Discord
+                document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
 
                 if (data.discord_user.avatar) {
                     document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/1338298959105495160/${data.discord_user.avatar}.png`;
                 }
 
+                const dot = document.getElementById('status-dot');
+                const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
+                dot.style.background = statusColors[data.discord_status] || statusColors.offline;
+
                 const activityEl = document.getElementById('discord-activity');
-                if (data.activities && data.activities.length > 0) {
-                    const act = data.activities[0];
-                    activityEl.innerText = act.details ? `${act.name}: ${act.details}` : act.name;
+                const gameIcon = document.getElementById('game-icon');
+                
+                const game = data.activities.find(a => a.type === 0);
+                const customStatus = data.activities.find(a => a.type === 4);
+
+                if (game) {
+                    activityEl.innerText = `Jugando a ${game.name}`;
+                    if (game.assets && game.assets.large_image) {
+                        let imgId = game.assets.large_image;
+                        gameIcon.src = imgId.startsWith("mp:external") 
+                            ? `https://media.discordapp.net/external/${imgId.split("mp:external/")[1]}`
+                            : `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgId}.png`;
+                        gameIcon.style.display = 'block';
+                    } else {
+                        gameIcon.style.display = 'none';
+                    }
+                } else if (customStatus) {
+                    activityEl.innerText = customStatus.state || "Just chilling";
+                    gameIcon.style.display = 'none';
                 } else {
-                    activityEl.innerText = "Just chilling";
+                    activityEl.innerText = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
+                    gameIcon.style.display = 'none';
                 }
             } catch (e) { console.log(e); }
         }
-        setInterval(fetchStatus, 30000);
+        setInterval(fetchStatus, 15000);
     </script>
 </body>
 </html>
