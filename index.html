@@ -26,25 +26,33 @@
         .quote { font-style: italic; color: #eee; margin: 15px 0; font-size: 1.1rem; letter-spacing: 1px; }
         .location { font-size: 0.8rem; color: #bbb; margin-bottom: 25px; }
 
-        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
-        .discord-avatar-container { position: relative; width: 55px; height: 55px; flex-shrink: 0; }
+        /* --- BLOQUE DE DISCORD ESTILO TARJETA --- */
+        .discord-status { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 18px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: left; margin-bottom: 30px; }
+        .discord-avatar-container { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
         .discord-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; background: #747f8d; }
-        .discord-info { flex: 1; overflow: hidden; }
-        .discord-name { font-weight: bold; font-size: 1rem; color: #fff; }
-        .discord-activity { font-size: 0.8rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-        .game-icon { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; display: none; }
+        .status-dot { position: absolute; bottom: 4px; right: 4px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #111; background: #747f8d; }
+        
+        .discord-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
+        .discord-name { font-weight: bold; font-size: 1.1rem; color: #fff; margin-bottom: 2px; }
+        
+        /* Bloques separados */
+        .status-block { font-size: 0.85rem; color: #ccc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: none; align-items: center; gap: 5px; }
+        .status-block.active { display: flex; }
+        .status-block i { font-size: 0.75rem; opacity: 0.7; }
+
+        .game-icon { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         .socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
         .socials a { color: white; font-size: 1.6rem; text-decoration: none; transition: 0.3s; opacity: 0.6; }
         .socials a:hover { opacity: 1; transform: scale(1.2); }
 
+        /* --- CARD DE MÚSICA INFERIOR --- */
         .music-card { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 12px 18px; border-radius: 15px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; opacity: 0; transition: 1s; }
         .album-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
         .music-details { display: flex; flex-direction: column; }
         .music-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 2px; }
         .progress-container { width: 130px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 6px 0; }
-        .progress-bar { height: 100%; background: #fff; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #fff; transition: width 0.1s linear; }
+        .progress-bar { height: 100%; background: #1DB954; width: 0%; border-radius: 2px; box-shadow: 0 0 5px #1DB954; transition: width 0.1s linear; }
         .time-info { font-size: 0.65rem; color: #aaa; display: flex; justify-content: space-between; }
 
         #ghost-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: hidden; }
@@ -76,7 +84,15 @@
             </div>
             <div class="discord-info">
                 <p id="discord-name" class="discord-name">Cargando...</p>
-                <p id="discord-activity" class="discord-activity">Offline</p>
+                <div id="block-game" class="status-block">
+                    <i class="fas fa-gamepad"></i> <span id="text-game"></span>
+                </div>
+                <div id="block-spotify" class="status-block">
+                    <i class="fab fa-spotify" style="color: #1DB954;"></i> <span id="text-spotify"></span>
+                </div>
+                <div id="block-idle" class="status-block active">
+                    <span id="text-idle">Offline</span>
+                </div>
             </div>
             <img id="game-icon" class="game-icon">
         </div>
@@ -91,9 +107,9 @@
     </div>
 
     <div class="music-card" id="music-player">
-        <img id="spotify-album-art" src="https://i.pinimg.com/1200x/2b/87/8a/2b878a9ae7844310d584034d517d1f16.jpg" class="album-art">
+        <img id="spotify-album-art" src="" class="album-art">
         <div class="music-details">
-            <span id="spotify-song-title" class="music-title">Cargando...</span>
+            <span id="spotify-song-title" class="music-title">Nada reproduciendo</span>
             <div class="progress-container">
                 <div class="progress-bar" id="music-progress"></div>
             </div>
@@ -123,21 +139,17 @@
         function start() {
             const vid = document.getElementById('vid');
             const overlay = document.getElementById('overlay');
-            
             overlay.style.opacity = '0';
             setTimeout(() => { overlay.style.display = 'none'; }, 500);
-
             vid.style.opacity = '0.6';
             document.getElementById('main-content').style.opacity = '1';
             document.getElementById('main-content').style.transform = 'translateY(0)';
             document.getElementById('music-player').style.opacity = '1';
-
             vid.muted = true;
             vid.play().then(() => { vid.muted = false; }).catch(() => { vid.play(); });
-            
             setInterval(createGhost, 700);
             fetchStatus();
-            setInterval(fetchStatus, 5000); // Actualiza cada 5 seg
+            setInterval(fetchStatus, 5000); 
         }
 
         async function fetchStatus() {
@@ -147,27 +159,29 @@
                 if (!json.success) return;
                 
                 const data = json.data;
-                const activityEl = document.getElementById('discord-activity');
-                const gameIcon = document.getElementById('game-icon');
                 
-                // Actualizar info básica
+                // Info Usuario
                 document.getElementById('discord-name').innerText = data.discord_user.global_name || data.discord_user.username;
                 if (data.discord_user.avatar) {
                     document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/1338298959105495160/${data.discord_user.avatar}.png`;
                 }
-
-                // Color de estado
                 const statusColors = { online: '#43b581', idle: '#faa61a', dnd: '#f04747', offline: '#747f8d' };
                 document.getElementById('status-dot').style.background = statusColors[data.discord_status] || statusColors.offline;
 
-                let finalStatus = "";
-                let hasGame = false;
+                // Control de Bloques
+                const blockGame = document.getElementById('block-game');
+                const blockSpotify = document.getElementById('block-spotify');
+                const blockIdle = document.getElementById('block-idle');
+                const gameIcon = document.getElementById('game-icon');
 
-                // 1. JUEGO
+                let activeActivity = false;
+
+                // 1. Lógica de Juego
                 const game = data.activities.find(a => a.type === 0);
                 if (game) {
-                    finalStatus = `Jugando a ${game.name}`;
-                    hasGame = true;
+                    blockGame.classList.add('active');
+                    document.getElementById('text-game').innerText = `Jugando a ${game.name}`;
+                    activeActivity = true;
                     if (game.assets && game.assets.large_image) {
                         let imgId = game.assets.large_image;
                         gameIcon.src = imgId.startsWith("mp:external") 
@@ -175,42 +189,44 @@
                             : `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgId}.png`;
                         gameIcon.style.display = 'block';
                     }
+                } else {
+                    blockGame.classList.remove('active');
+                    gameIcon.style.display = 'none';
                 }
 
-                // 2. SPOTIFY (Se une al texto si hay juego)
+                // 2. Lógica de Spotify
                 if (data.listening_to_spotify && data.spotify) {
-                    const spotifyText = `🎵 ${data.spotify.song}`;
-                    finalStatus = finalStatus ? `${finalStatus} | ${spotifyText}` : `Escuchando ${spotifyText}`;
-                    
-                    // Actualizar Card de música (abajo izquierda)
+                    blockSpotify.classList.add('active');
+                    document.getElementById('text-spotify').innerText = `Escuchando ${data.spotify.song}`;
+                    activeActivity = true;
+
+                    // Actualizar Player inferior
                     document.getElementById('spotify-song-title').innerText = data.spotify.song;
                     document.getElementById('spotify-album-art').src = data.spotify.album_art_url;
                     
-                    // Si no hay juego, la portada de Spotify va al icono del estado
-                    if (!hasGame) {
+                    // Si no hay juego, la portada de Spotify va al icono lateral
+                    if (!game) {
                         gameIcon.src = data.spotify.album_art_url;
                         gameIcon.style.display = 'block';
-                        gameIcon.style.borderRadius = '8px';
+                        gameIcon.style.borderRadius = '10px';
                     }
 
-                    // Barra de progreso Spotify
-                    const start = data.spotify.timestamps.start;
-                    const end = data.spotify.timestamps.end;
-                    const now = Date.now();
-                    const total = end - start;
-                    const progress = Math.max(0, Math.min(100, ((now - start) / total) * 100));
+                    // Progreso
+                    const progress = Math.max(0, Math.min(100, ((Date.now() - data.spotify.timestamps.start) / (data.spotify.timestamps.end - data.spotify.timestamps.start)) * 100));
                     document.getElementById('music-progress').style.width = progress + "%";
                 } else {
+                    blockSpotify.classList.remove('active');
                     document.getElementById('spotify-song-title').innerText = "Nada reproduciendo";
                     document.getElementById('music-progress').style.width = "0%";
                 }
 
-                if (!finalStatus) {
-                    finalStatus = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
-                    gameIcon.style.display = 'none';
+                // 3. Estado Idle (Just chilling)
+                if (!activeActivity) {
+                    blockIdle.classList.add('active');
+                    document.getElementById('text-idle').innerText = data.discord_status === 'offline' ? "Desconectado" : "Just chilling";
+                } else {
+                    blockIdle.classList.remove('active');
                 }
-
-                activityEl.innerText = finalStatus;
 
             } catch (e) { console.error("Error Lanyard:", e); }
         }
